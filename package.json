@@ -6,8 +6,9 @@
   "license": "MIT",
   "description": "AI分析GIT提交并生成周报",
   "version": "0.0.12",
+  "type": "module",
   "engines": {
-    "vscode": "^1.106.1"
+    "vscode": "^1.86.0"
   },
   "categories": [
     "Other"
