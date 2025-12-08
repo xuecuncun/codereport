@@ -1,0 +1,178 @@
+{
+  "name": "codereport-ai",
+  "displayName": "CodeReport",
+  "publisher": "goldie",
+  "private": true,
+  "license": "MIT",
+  "description": "AI分析GIT提交并生成周报",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.106.1"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codereport",
+          "title": "CodeReport",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "codereport": [
+        {
+          "type": "webview",
+          "id": "codereport.sidebarView",
+          "name": "分析GIT提交生成周报",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "configuration": [
+      {
+        "title": "模式选择",
+        "properties": {
+          "codereport.AIMode": {
+            "type": "string",
+            "enum": [
+              "openai",
+              "custom"
+            ],
+            "default": "openai",
+            "description": "模式选择，配置openai模型，或者自定义api"
+          }
+        }
+      },
+      {
+        "title": "模型配置",
+        "properties": {
+          "codereport.AIModel": {
+            "type": "string",
+            "default": "qwen3-max",
+            "description": "模型名称"
+          },
+          "codereport.apiKey": {
+            "type": "string",
+            "default": "",
+            "description": "模型 API Key"
+          },
+          "codereport.apiBaseUrl": {
+            "type": "string",
+            "default": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+            "description": "默认千问大模型BaseURL，注意：墙外模型需要客户端或者全局支持科学上网哦"
+          },
+          "codereport.BaseGitDays": {
+            "type": "number",
+            "default": 5,
+            "description": "获取 git 日志的天数"
+          },
+          "codereport.BasePromptTemplateList": {
+            "type": "array",
+            "default": [
+              {
+                "label": "默认提示词（详细版）",
+                "content": "你是一名资深工程师，请根据以下 Git 提交记录生成一份严谨、可交付、符合中国研发团队习惯的【技术周报】。\n\n要求：\n1. 只能根据 commit message 和 diff 里真实出现的内容总结，不得杜撰或夸大。\n2. 所有输出必须是中文，使用简洁专业的表达方式。\n3. 重点突出“这周实际做了什么”，避免空洞描述。\n4. 按 Markdown 格式结构化输出：\n\n## 一、本周完成工作（核心）\n- 按功能点/模块总结实际完成的工作（来源必须来自 commit）\n- 每个点补充一句“带来的业务价值/效果”\n\n## 二、技术细节与处理思路\n- 列出本周出现的重点技术改动、实现逻辑或解决方案\n\n## 三、问题与风险\n- 根据提交内容识别潜在问题、技术债、未完成事项\n\n## 四、下周计划（自动推导）\n- 基于已完成和现有工作状态，自然推导下一步工作，而不是凭空想象\n\n以下是 Git 提交记录（请严格基于这些内容撰写周报，不要虚构任何功能）：\n\n{{gitlog}}\n\n根据本周的 Git 提交，提取关键工作亮点，生成摘要形式的周报。"
+              }
+            ],
+            "description": "提示词列表，可包含 label 和 content 字段。content中git提交信息使用 {{gitlog}} 占位。eg: { label: '自定义提示词', content: '请帮我分析以下代码提交信息：{{gitlog}}' }",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "description": "提示词模版名称"
+                },
+                "content": {
+                  "type": "string",
+                  "description": "提示词模版"
+                }
+              },
+              "required": [
+                "content",
+                "label"
+              ]
+            }
+          },
+          "codereport.BaseTemperature": {
+            "type": "number",
+            "default": 0.7,
+            "description": "temperature"
+          },
+          "codereport.BaseMaxTokens": {
+            "type": "number",
+            "default": 2048,
+            "description": "最大 token 数"
+          }
+        }
+      },
+      {
+        "title": "自定义模型配置",
+        "properties": {
+          "codereport.customApiUrl": {
+            "type": "string",
+            "default": "",
+            "description": "自定义模型 URL（POST）"
+          },
+          "codereport.customApiBodyTemplate": {
+            "type": "object",
+            "default": {
+              "model": "qwen-plus",
+              "input": {
+                "messages": [
+                  {
+                    "role": "user",
+                    "content": "{{prompt}}"
+                  }
+                ]
+              },
+              "parameters": {
+                "result_format": "message"
+              }
+            },
+            "description": "body 模板，可使用 {{prompt}} 占位符"
+          },
+          "codereport.customApiHeaders": {
+            "type": "object",
+            "default": {
+              "Authorization": "Bearer sk-1c4fa9db5e06495fb3983b16c881fc51",
+              "Content-Type": "application/json"
+            },
+            "description": "请求头 headers"
+          },
+          "codereport.customResultField": {
+            "type": "string",
+            "default": "data.output.choices[0].message.content",
+            "description": "响应 JSON 的取值字段路径"
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "pnpm run compile && pnpm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@types/vscode": "^1.106.1",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.39.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.3"
+  },
+  "dependencies": {
+    "openai": "^6.9.1"
+  }
+}
