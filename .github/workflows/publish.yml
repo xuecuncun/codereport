@@ -1,0 +1,37 @@
+name: Publish VSCode Extension
+
+on:
+  push:
+    tags:
+      - "v*" # 只有打 tag 才会发布
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build extension
+        run: pnpm run build
+
+      - name: Install vsce
+        run: pnpm add -g @vscode/vsce
+
+      - name: Publish to VSCode Marketplace
+        run: vsce publish -p ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
