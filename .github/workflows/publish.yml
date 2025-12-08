@@ -19,10 +19,14 @@ jobs:
           node-version: 20
           cache: "pnpm"
 
-      - name: Setup pnpm
+      - name: Install PNPM
         uses: pnpm/action-setup@v4
         with:
           version: 9
+          run_install: false  # 避免自动安装，让我们手动执行
+
+      - name: Verify pnpm installed
+        run: pnpm --version
 
       - name: Install dependencies
         run: pnpm install
