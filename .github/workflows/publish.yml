@@ -3,39 +3,33 @@ name: Publish VSCode Extension
 on:
   push:
     tags:
-      - "v*" # 只有打 tag 才会发布
+      - 'v*'  # 当 push v0.1.0 这样的 tag 时触发
 
 jobs:
   publish:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      # 1. checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      # 2. 设置 node（与你本地一致）
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: "pnpm"
+          node-version: '23.11.0'
 
-      - name: Install PNPM
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-          run_install: false  # 避免自动安装，让我们手动执行
-
-      - name: Verify pnpm installed
-        run: pnpm --version
-
+      # 3. 安装依赖（npm）
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
 
-      - name: Build extension
-        run: pnpm run build
+      # 4. 打包 VSCode 扩展
+      - name: Package extension
+        run: npx vsce package
 
-      - name: Install vsce
-        run: pnpm add -g @vscode/vsce
-
+      # 5. 发布到 VSCode Marketplace
       - name: Publish to VSCode Marketplace
-        run: vsce publish -p ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
+        env:
+          VSCE_PAT: ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
+        run: npx vsce publish --pat "$VSCE_PAT"
