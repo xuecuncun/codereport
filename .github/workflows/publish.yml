@@ -38,4 +38,4 @@ jobs:
       - name: Publish to VSCode Marketplace
         env:
           VSCE_PAT: ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
-        run: pnpm exec @vscode/vsce publish --no-dependencies --pat "$VSCE_PAT"
+        run: pnpm exec vsce publish --no-dependencies --pat "$VSCE_PAT"
