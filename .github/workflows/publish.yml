@@ -28,7 +28,7 @@ jobs:
 
       # 4. 安装依赖（pnpm）
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       # 5. 编译扩展
       - name: Build extension
