@@ -20,29 +20,16 @@ jobs:
         with:
           node-version: '23.11.0'
 
-      # 3. Setup pnpm（用于日常开发依赖）
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
-
-      # 4. Install dependencies with pnpm
+      # 3. Install dependencies with npm
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
 
-      # 5. Enable yarn for vsce dependency check
-      - name: Enable Yarn
-        run: |
-          corepack enable
-          corepack prepare yarn@stable --activate
-          yarn install --ignore-scripts
-
-      # 6. Package VSCode extension (use yarn mode)
+      # 4. Package VSCode extension
       - name: Package extension
-        run: pnpm exec vsce package --yarn
+        run: npx vsce package
 
-      # 7. Publish extension
+      # 5. Publish extension
       - name: Publish to VSCode Marketplace
         env:
           VSCE_PAT: ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
-        run: pnpm exec vsce publish --yarn --pat "$VSCE_PAT"
+        run: npx vsce publish --pat "$VSCE_PAT"

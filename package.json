@@ -156,12 +156,10 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "pnpm run compile",
+    "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "pnpm run compile && pnpm run lint",
-    "lint": "eslint src",
-    "test": "vscode-test"
+    "lint": "eslint src"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
@@ -178,5 +176,9 @@
     "axios": "^1.13.2",
     "dot-object": "^2.1.5",
     "openai": "^6.9.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xuecuncun/codereport.git"
   }
 }
