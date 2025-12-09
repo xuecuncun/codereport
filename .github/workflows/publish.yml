@@ -29,7 +29,7 @@ jobs:
           pnpm prune
 
       - name: Build extension
-        run: pnpm run build
+        run: pnpm run compile
 
       - name: Package extension
         run: pnpm exec vsce package
