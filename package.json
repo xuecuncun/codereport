@@ -5,7 +5,7 @@
   "private": true,
   "license": "MIT",
   "description": "AI分析GIT提交并生成周报",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "type": "module",
   "engines": {
     "vscode": "^1.106.1"
