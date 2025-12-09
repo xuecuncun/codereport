@@ -10,32 +10,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. checkout
+      # 1. Checkout
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. 设置 Node（与你本地一致）
+      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '23.11.0'
 
-      # 3. 安装 pnpm
+      # 3. Setup pnpm（用于日常开发依赖）
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 9  # 或者你本地的 pnpm major 版本
+          version: 9
 
-      # 4. 安装依赖（pnpm）
+      # 4. Install dependencies with pnpm
       - name: Install dependencies
         run: pnpm install
 
-      # 5. 打包 VSCode 扩展
-      - name: Package extension
-        run: pnpm exec vsce package
+      # 5. Enable yarn for vsce dependency check
+      - name: Enable Yarn
+        run: |
+          corepack enable
+          corepack prepare yarn@stable --activate
+          yarn install --ignore-scripts
 
-      # 6. 发布扩展
+      # 6. Package VSCode extension (use yarn mode)
+      - name: Package extension
+        run: pnpm exec vsce package --yarn
+
+      # 7. Publish extension
       - name: Publish to VSCode Marketplace
         env:
           VSCE_PAT: ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
-        run: pnpm exec vsce publish --pat "$VSCE_PAT"
+        run: pnpm exec vsce publish --yarn --pat "$VSCE_PAT"
