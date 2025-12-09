@@ -10,37 +10,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. checkout
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. 设置 Node（与你本地一致）
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '23.11.0'
 
-      # 3. 安装 pnpm
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 9  # 或者你本地的 pnpm major 版本
+          version: 9
 
-      # 4. 安装依赖（pnpm）
-      - name: Install dependencies cleanly
+      - name: Install dependencies
         run: |
           pnpm install --frozen-lockfile
           pnpm prune
 
-      # 5. 编译扩展
       - name: Build extension
-        run: pnpm run compile
+        run: pnpm run build
 
-      # 6. 打包 VSCode 扩展
       - name: Package extension
         run: pnpm exec vsce package
 
-      # 7. 发布扩展
       - name: Publish to VSCode Marketplace
         env:
           VSCE_PAT: ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
