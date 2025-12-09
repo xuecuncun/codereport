@@ -1,8 +1,8 @@
 import axios from "axios";
 
-import { type Config, getConfig } from "../utils/config";
-import { findFirstPath } from "../utils";
-var dot = require('dot-object');
+import { type Config, getConfig } from "../utils/config.js";
+import { findFirstPath } from "../utils/index.js";
+import * as dot from 'dot-object';
 
 export class CustomModel {
   private config: Config;

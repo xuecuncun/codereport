@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Prompt } from './config';
+import { Prompt } from './config.js';
 
 export async function forcePickPromot(items: Prompt[]) {
   const selected = await vscode.window.showQuickPick(items, {

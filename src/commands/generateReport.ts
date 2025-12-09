@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
 
-import { createModelClient } from "../ai";
-import { getGitCommits } from "../services/gitService";
-import { SidebarViewProvider } from "../views/sidebarView";
-import { getConfig } from "../utils/config";
-import { forcePickPromot } from "../utils/selectPrompt";
+import { createModelClient } from "../ai/index.js";
+import { getGitCommits } from "../services/gitService.js";
+import { SidebarViewProvider } from "../views/sidebarView.js";
+import { getConfig } from "../utils/config.js";
+import { forcePickPromot } from "../utils/selectPrompt.js";
 
 export async function generateReport(
   provider: SidebarViewProvider,

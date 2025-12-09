@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { type Config, getConfig } from "../utils/config";
+import { type Config, getConfig } from "../utils/config.js";
 
 export class OpenAIModel {
   private client: OpenAI;

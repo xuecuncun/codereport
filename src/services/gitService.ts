@@ -1,5 +1,5 @@
 import { execSync } from "child_process";
-import { getWorkspaceFolder } from "../utils/workspace";
+import { getWorkspaceFolder } from "../utils/workspace.js";
 
 export async function getGitCommits(days = 5): Promise<string> {
   const folder = getWorkspaceFolder();

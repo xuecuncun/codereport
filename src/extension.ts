@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { SidebarViewProvider } from './views/sidebarView';
-import { generateReport } from './commands/generateReport';
+import { SidebarViewProvider } from './views/sidebarView.js';
+import { generateReport } from './commands/generateReport.js';
 
 export function activate(context: vscode.ExtensionContext) {
   const sidebarProvider = new SidebarViewProvider(context.extensionUri);

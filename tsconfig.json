@@ -1,11 +1,14 @@
 {
   "compilerOptions": {
-    "module": "es2022",
-    "target": "es2022",
+    "target": "ES2023",          // 现代 JS
+    "module": "NodeNext",         // 必须和 moduleResolution 配套
+    "moduleResolution": "NodeNext",
     "outDir": "out",
-    "moduleResolution": "bundler",
+    "rootDir": "src",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
     "strict": true,
-    "esModuleInterop": true
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src"]
 }
